@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lathikha R</title>
+  <style>
+    :root {
+      --primary: #667eea;
+      --secondary: #e616c3;
+      --bg: #667eea;
+      --sidebar: #2a232a;
+      --text: white;
+      --muted: white;
+      --accent: white;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+    }
+    .sidebar {
+      width: 290px;
+      background: var(--sidebar);
+      box-shadow: 2px 0 16px rgba(0,0,0,0.5);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem 1rem 1rem 1rem;
+      position: fixed;
+      height: 100vh;
+      z-index: 10;
+    }
+    .profile-pic {
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid var(--primary);
+      margin-bottom: 1.2rem;
+    }
+    .sidebar h1 {
+      font-size: 1.5rem;
+      margin-bottom: 0.2rem;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .sidebar p {
+      color: var(--muted);
+      font-size: 1rem;
+      margin-bottom: 1.2rem;
+      text-align: center;
+    }
+    .sidebar nav {
+      width: 100%;
+      margin-bottom: 2rem;
+    }
+    .sidebar nav ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+      align-items: center;
+    }
+    .sidebar nav a {
+      text-decoration: none;
+      color: var(--text);
+      font-weight: 500;
+      font-size: 1.1rem;
+      transition: color 0.2s;
+      position: relative;
+    }
+    .sidebar nav a.active, .sidebar nav a:hover {
+      color: var(--primary);
+    }
+    .sidebar .download-btn {
+      display: inline-block;
+      margin: 1.5rem 0 1rem 0;
+      padding: 0.7em 1.5em;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: background 0.2s;
+      box-shadow: 0 2px 8px rgba(102,126,234,0.08);
+    }
+    .sidebar .download-btn:hover {
+      background: var(--secondary);
+    }
+    .sidebar .social {
+      display: flex;
+      gap: 1.2rem;
+      margin-top: 1.2rem;
+    }
+    .sidebar .social a {
+      color: var(--primary);
+      font-size: 1.3rem;
+      transition: color 0.2s;
+    }
+    .sidebar .social a:hover {
+      color: var(--secondary);
+    }
+    .main-content {
+      margin-left: 290px;
+      width: calc(100% - 290px);
+      padding: 2.5rem 2rem 2rem 2rem;
+    }
+    section {
+      margin-bottom: 3.5rem;
+      background: #23272a;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.5);
+      padding: 2.5rem 2rem;
+    }
+    .section-title {
+      font-size: 2rem;
+      margin-bottom: 1.5rem;
+      color: var(--primary);
+      text-align: left;
+      font-weight: 700;
+    }
+    /* About */
+    .about-details {
+      font-size: 1.1rem;
+      color: var(--muted);
+      margin-bottom: 1.2rem;
+      text-align: justify;
+    }
+    /* Resume */
+    .resume-block {
+      margin-bottom: 2rem;
+    }
+    .resume-block h3 {
+      color: var(--secondary);
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
+    }
+    .resume-block ul {
+      list-style: none;
+      padding-left: 0;
+    }
+    .resume-block li {
+      margin-bottom: 0.7rem;
+      color: var(--text);
+    }
+    .resume-block .item-title {
+      font-weight: 600;
+      color: var(--primary);
+    }
+    .resume-block .item-date {
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin-left: 0.5rem;
+    }
+    /* Skills */
+    .skills-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+    }
+    .skill {
+      flex: 1 1 200px;
+      margin-bottom: 1.5rem;
+    }
+    .skill-title {
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+    }
+    .progress-bar {
+      background: #23272a;
+      border-radius: 10px;
+      height: 12px;
+      width: 100%;
+      overflow: hidden;
+      margin-bottom: 0.3rem;
+    }
+    .progress {
+      height: 100%;
+      border-radius: 10px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      transition: width 1s;
+    }
+    .skill-percent {
+      font-size: 0.95rem;
+      color: var(--muted);
+      margin-left: 0.5rem;
+    }
+    /* Projects */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 2rem;
+      margin-top: 1.5rem;
+    }
+    .project-card {
+      background: #181a1b;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+      padding: 1.5rem 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      transition: box-shadow 0.2s;
+    }
+    .project-card:hover {
+      box-shadow: 0 6px 24px rgba(102,126,234,0.13);
+    }
+    .project-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+    }
+    .project-desc {
+      color: var(--muted);
+      font-size: 0.98rem;
+      margin-bottom: 0.7rem;
+    }
+    .project-tags {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 0.7rem;
+    }
+    .project-tag {
+      background: #23272a;
+      color: var(--primary);
+      border-radius: 12px;
+      padding: 0.2rem 0.7rem;
+      font-size: 0.85rem;
+    }
+    .project-link {
+      color: var(--secondary);
+      text-decoration: none;
+      font-weight: 500;
+      margin-top: 0.5rem;
+      transition: color 0.2s;
+    }
+    .project-link:hover {
+      color: var(--accent);
+    }
+    /* Blog */
+    .blog-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 2rem;
+      margin-top: 1.5rem;
+    }
+    .blog-card {
+      background: #181a1b;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+      padding: 1.5rem 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      transition: box-shadow 0.2s;
+    }
+    .blog-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+    }
+    .blog-desc {
+      color: var(--muted);
+      font-size: 0.98rem;
+      margin-bottom: 0.7rem;
+    }
+    /* Contact */
+    .contact-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      max-width: 400px;
+      margin-top: 1.5rem;
+    }
+    .contact-form label {
+      font-weight: 500;
+    }
+    .contact-form input, .contact-form textarea {
+      padding: 0.7rem;
+      border: 1px solid #444;
+      border-radius: 6px;
+      font-size: 1rem;
+      font-family: inherit;
+      background: #181a1b;
+      color: #f4f6fb;
+    }
+    .contact-form textarea {
+      min-height: 100px;
+      resize: vertical;
+      color: #f4f6fb;
+    }
+    .contact-form button {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      padding: 0.7em 1.5em;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .contact-form button:hover {
+      background: var(--secondary);
+    }
+    /* Footer */
+    footer {
+      text-align: center;
+      color: var(--muted);
+      font-size: 1rem;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      background: #181a1b;
+      border-radius: 8px;
+      padding: 1.2rem 0 1.2rem 0;
+    }
+    @media (max-width: 900px) {
+      .sidebar {
+        width: 100vw;
+        height: auto;
+        flex-direction: row;
+        justify-content: space-between;
+        padding: 1rem 2rem;
+        position: static;
+        box-shadow: none;
+      }
+      .main-content {
+        margin-left: 0;
+        width: 100vw;
+        padding: 1rem;
+      }
+    }
+    @media (max-width: 600px) {
+      .sidebar {
+        flex-direction: column;
+        align-items: center;
+        padding: 1rem 0.5rem;
+      }
+      .main-content {
+        padding: 0.5rem;
+      }
+      section {
+        padding: 1.2rem 0.5rem;
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <aside class="sidebar">
+    <img src="Photo.jpeg" alt="Profile" class="profile-pic">
+    <h1>LATHIKHA R</h1>
+    <p>3rd Year IT Student<br><span style="font-size:0.95em; color:var(--muted);">Front End developer</span></p>
+    <a href="./Resume (5).pdf" download class="download-btn"><i class="fa fa-download"></i> Download Resume</a>
+    <nav>
+      <ul>
+        <li><a href="#about" class="active">About</a></li>
+        <li><a href="#resume">Resume</a></li>
+        <li><a href="#skills">Skills</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+    <div class="social">
+      <a href="https://github.com/R-Lathikha-05" target="_blank" rel="noopener"><i class="fab fa-github"></i></a>
+      <a href="https://www.linkedin.com/in/lathikha-r-26b110293/" target="_blank" rel="noopener"><i class="fab fa-linkedin"></i></a>
+      <a href="mailto:lathikha005@gmail.com"><i class="fa fa-envelope"></i></a>
+      <a href="https://wa.me/6374163458" target="_blank" rel="noopener"><i class="fab fa-whatsapp"></i></a>
+    </div>
+  </aside>
+  <main class="main-content">
+    <section id="about">
+      <h2 class="section-title">About Me</h2>
+      <div class="about-details">
+        I am <B>LATHIKHA R</B> 3rd-year Information Technology student with a solid foundation in software development, data structures, and database management. Passionate about learning emerging technologies like AI, cloud computing, and cybersecurity. I possess strong problem-solving skills, a collaborative mindset, and a keen interest in real-world IT projects. Seeking an opportunity to enhance my technical and professional skills through internships and live projects while contributing value to a dynamic organization.
+
+      </div>
+      <div class="about-details">
+        <b>Interests:</b> Web Development , Data Science , Cloud Computing
+      </div>
+      <div class="about-details">
+        <b>Birthday:</b> 21 September 2005
+      </div>
+    </section>
+    <section id="resume">
+      <h2 class="section-title">Resume</h2>
+      <div class="resume-block">
+        <h3>Education</h3>
+        <ul>
+          <li><span class="item-title">B.Tech Information Technology</span> <span class="item-date">2023-2027</span><br>M Kumarasamy College Of Engineering, Karur</li>
+          <li><span class="item-title">Higher Secondary School</span> <span class="item-date">- 83.5%</span><br>Cheran Matric Higher Secondary School</li>
+          <li><span class="item-title">Secondary School Leaving Certificate</span> <span class="item-date"></span><br>Cheran Matric Higher Secondary School</li>
+        </ul>
+      </div>
+      <div class="resume-block">
+        <h3>Experience</h3>
+        <ul>
+          <li><span class="item-title">Internship at Ippopay Technologies Private Limited</span> <span class="item-date">JULY 2025</span></li>
+          <li>&bullet;Actively participated in frontend development tasks, translating design mockups into interactive web components.</li>
+          <li>&bullet;Acquired hands-on experience with industry-standard frontend tools and frameworks.</li>
+          <li>&bullet;Learned about agile development methodologies and teamwork in a fast-paced environment.
+</li>
+        </ul>
+      </div>
+      <div class="resume-block">
+        <h3>Certification</h3>
+        <ul>
+          <li><span class="item-title">Certified Internship in Front end Development at Ippopay</span> <span class="item-date">Jun 2025</span></li>
+          <li><span class="item-title">Certified by NPTEL course on Introduction to Internet of Things</span> <span class="item-date">April 2025</span></li>
+          <li><span class="item-title">Certificate of Participation in Kalam Awards Hackathon</span> <span class="item-date">Sept 2024</span></li>
+        </ul>
+      </div>
+    </section>
+    <section id="skills">
+      <h2 class="section-title">Skills</h2>
+      <div class="skills-list">
+        <div class="skill">
+          <div class="skill-title">Front end Development </div>
+          <div class="progress-bar"><div class="progress" style="width:80%"></div></div>
+          <span class="skill-percent">80%</span>
+        </div>
+        <div class="skill">
+          <div class="skill-title">Java</div>
+          <div class="progress-bar"><div class="progress" style="width:40%"></div></div>
+          <span class="skill-percent">40%</span>
+        </div>
+        <div class="skill">
+          <div class="skill-title">Python</div>
+          <div class="progress-bar"><div class="progress" style="width:40%"></div></div>
+          <span class="skill-percent">40%</span>
+        </div>
+        
+      </div>
+    </section>
+    <section id="projects">
+      <h2 class="section-title">Projects</h2>
+      <div class="projects-grid">
+        <div class="project-card">
+          <div class="project-title">My Portfolio Site</div>
+          <div class="project-desc">A modern, responsive personal portfolio website built with HTML, CSS, and JavaScript.</div>
+          <div class="project-tags">
+            <span class="project-tag">Web development</span>
+          </div>
+          <a href="https://r-lathikha-05.github.io/Portfolio/" class="project-link" target="_blank" rel="noopener">View Project</a>
+        </div>
+        <div class="project-card">
+          <div class="project-title">Online Job Portal</div>
+          <div class="project-desc">Designed and developed an Online Job Portal in Java for efficient job posting and application management.</div>
+          <div class="project-tags">
+            <span class="project-tag">Applications</span>
+            <span class="project-tag">Java</span>
+          </div>
+          <a href="https://github.com/R-Lathikha-05/Java#" class="project-link" target="_blank" rel="noopener">View Project</a>
+        </div>
+        <div class="project-card">
+          <div class="project-title">Tour Package Management System</div>
+          <div class="project-desc">Created a Tour Package Management System using DBMS to organize tour details, bookings, and customer information efficiently.</div>
+          <div class="project-tags">
+            <span class="project-tag">PHP</span>
+            <span class="project-tag">HTML</span>
+            <span class="project-tag">CSS</span>
+          </div>
+          <a href="https://github.com/R-Lathikha-05/DBMS" class="project-link" target="_blank" rel="noopener">View Project</a>
+        </div>
+      </div>
+    </section>
+    <section id="contact">
+      <h2 class="section-title">Contact</h2>
+      <form class="contact-form" action="https://formspree.io/f/mzzvgkvq" method="POST">
+        <label for="name">Name</label>
+        <input type="text" id="name" name="name" placeholder="Your Name" required>
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" placeholder="your@email.com" required>
+        <label for="message">Message</label>
+        <textarea id="message" name="message" placeholder="Your message..." required></textarea>
+        <button type="submit">Send Message</button>
+      </form>
+    </section>
+  </main>
+</body>
+</html>
